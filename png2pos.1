@@ -1,0 +1,120 @@
+.TH png2pos 1
+.SH NAME
+png2pos \- a utility to convert PNG images to ESC/POS format
+.SH SYNOPSIS
+\fBpng2pos\fR
+[\fB\-V\fR]
+[\fB\-h\fR]
+[\fB\-c\fR]
+[\fB\-a\fR \fIL|C|R\fR]
+[\fB\-r\fR]
+[\fB\-p\fR]
+[\fB\-s\fR \fISPEED\fR]
+[\fB\-o\fR \fIFILE\fR]
+[INPUT_FILES...]
+.SH DESCRIPTION
+png2pos is a utility to convert PNG images to ESC/POS format (printer
+control codes and escape sequences) used by POS thermal printers.
+Output file can be just sent to printer.
+.PP
+It accepts any PNG file (B/W, greyscale, RGB, RGBA), applies Histogram
+Equalization Algorithm and via "Jarvis, Judice, and Ninke" Dithering
+Algorithm converts it to B/W bitmap wrapped by ESC/POS commands.
+png2pos prepends needed printer initialization binary sequences and
+adds paper cutoff command, if requested.
+.PP
+png2pos utilizes ESC@, GSV, GS(K, GS8L and GS(L ESC/POS commands.
+.SH OPTIONS
+.TP
+.BR \-V
+display the version number and exit
+.TP
+.BR \-h
+display this short help and exit
+.TP
+.BR \-c
+cut the paper at the end of job
+.TP
+.BR "\-a \fIL|C|R\fR"
+set horizontal image alignment (Left, Center, Right)
+.TP
+.BR \-r
+rotate image upside down before it is printed
+.TP
+.BR \-p
+switch to photo mode (post-process input files)
+.TP
+.BR "\-s \fISPEED\fR"
+set the print speed, falling back to the default speed if not set;
+\fISPEED\fR must be in the interval <1; 9>, the lower value set,
+the slower print.
+.TP
+.BR "\-o \fIFILE\fR"
+output file or device to write to; with no \fIFILE\fR, or when \fIFILE\fR
+is -, write to standard output
+.PP
+All numeric values for parameters may include a "0x" prefix, and the number
+will be read in base 16, a "0" prefix for base 8 (octal); otherwise,
+a 10 (decimal) base is taken.
+.PP
+If there are no INPUT_FILES specified, png2pos is still usable. It could be
+used just to generate init and cut commands.
+.SH SHELL VARIABLES
+The following environment variables are recognized by png2pos:
+.TP
+.BR PNG2POS_PRINTER_MAX_WIDTH
+set printer head width in pixels (printer related), falling back to the
+default value 512 (= 72 mm printers) if not set; You probably need to specify
+384 for 56 mm printers, or 576 for some high-density 72 mm printers.
+Value must be divisible by 8!
+.TP
+.BR PNG2POS_GS8L_MAX_Y
+set chunk height used for GS8L command (printer related), falling back
+to the default value 384 if not set
+.SH EXIT STATUS
+png2pos uses a common convention of zero (0) for success and non-zero
+(> 0) for error.
+.SH EXAMPLES
+.nf
+png2pos -o /dev/usb/lp0 -c -r -a R /tmp/lena.png /tmp/text.png
+.fi
+.PP
+This command will convert files lena.png and text.png into ESC/POS format.
+Output will be sent directly to printer (/dev/usb/lp0).
+Images will be rotated by 180 degrees and right-aligned.
+At the end of job paper will be cut off.
+.SH BUGS
+No known bugs.
+.SH REPORTING BUGS
+Bug reports can be seen and new bugs could be reported
+at https://github.com/petrkutalek/png2pos/issues
+.SH AUTHOR
+png2pos has been written by Petr Kutalek <petr@kutalek.cz>.
+.SH WWW
+https://github.com/petrkutalek/png2pos
+.SH COPYRIGHT
+Licensed under the MIT License:
+.PP
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom
+the Software is furnished to do so, subject to the following conditions:
+.PP
+- The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+.PP
+- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+.PP
+(c) 2012 - 2018 Petr Kutalek: png2pos
+.PP
+Some portions:
+.br
+(c) 2005 - 2018 Lode Vandevenne: LodePNG library

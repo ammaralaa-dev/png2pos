@@ -1,0 +1,9 @@
+# C
+*.o
+*.a
+
+# Documents
+debug_*
+*.pos
+png2pos
+*.1.gz

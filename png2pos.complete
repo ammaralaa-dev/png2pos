@@ -1,0 +1,32 @@
+_png2pos()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+    case "$prev" in
+    -a)
+        COMPREPLY=( $( compgen -W 'L C R' -- $cur ) )
+        return 0
+        ;;
+    -s)
+        COMPREPLY=( $( compgen -W "{1..9}" -- $cur ) )
+        return 0
+        ;;
+    -o)
+        local IFS=$'\n'
+        COMPREPLY=( $( compgen -o plusdirs -f -- $cur ) )
+        return 0
+        ;;
+    esac
+
+    if [[ $cur == -* ]] ; then
+        COMPREPLY=( $( compgen -W '-V -h -c -a -r -p -s -o' -- $cur ) )
+        return 0
+    fi
+
+    local IFS=$'\n'
+    COMPREPLY=( $( compgen -o plusdirs -f -X '!*.png' -- $cur ) )
+    return 0
+}
+
+complete -o filenames -F _png2pos png2pos
